@@ -1,6 +1,7 @@
 package gows
 
 import (
+	"net/http"
 	"sync"
 
 	"github.com/GTedZ/gows/parser"
@@ -15,6 +16,8 @@ type Connection struct {
 
 	connectionId int
 
+	Request *http.Request
+
 	Data connectionData
 
 	OnRequest func(msg []byte, request *ResponseHandler)
@@ -23,10 +26,12 @@ type Connection struct {
 	OnClose   func(code int, reason string)
 }
 
-func (connection *Connection) init(parent *Server, conn *ws.Conn, privateMessagePropertyName string, connectionId int) {
+func (connection *Connection) init(parent *Server, conn *ws.Conn, r *http.Request, privateMessagePropertyName string, connectionId int) {
 	connection.base = websockets.AssignRegisteredCallbacksWebsocket(conn, "", privateMessagePropertyName, true)
 	connection.parent = parent
 	connection.connectionId = connectionId
+
+	connection.Request = r
 
 	//
 
@@ -317,10 +322,10 @@ func (connection *Connection) Close() {
 
 ////
 
-func assignConnection(parent *Server, conn *ws.Conn, privateMessagePropertyName string, connectionId int) *Connection {
+func assignConnection(parent *Server, conn *ws.Conn, r *http.Request, privateMessagePropertyName string, connectionId int) *Connection {
 	var connection Connection
 
-	connection.init(parent, conn, privateMessagePropertyName, connectionId)
+	connection.init(parent, conn, r, privateMessagePropertyName, connectionId)
 
 	return &connection
 }

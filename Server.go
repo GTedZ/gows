@@ -50,7 +50,7 @@ func (server *Server) onConnect(w http.ResponseWriter, r *http.Request) {
 	connectionId := server.nextConnectionId
 	server.nextConnectionId++
 
-	connection := assignConnection(server, conn, server.privateMessagePropertyName, connectionId)
+	connection := assignConnection(server, conn, r, server.privateMessagePropertyName, connectionId)
 
 	server.addConnection(connection)
 
