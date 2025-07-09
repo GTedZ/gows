@@ -117,30 +117,30 @@ func (connection *Connection) GetId() int {
 //// Connection Data
 
 type connectionData struct {
-	Mu         sync.Mutex
-	Bools      map[string]bool
-	Ints       map[string]int64
-	Floats     map[string]float64
-	Strings    map[string]string
-	Interfaces map[string]interface{}
+	mu         sync.Mutex
+	bools      map[string]bool
+	ints       map[string]int64
+	floats     map[string]float64
+	strings    map[string]string
+	interfaces map[string]interface{}
 }
 
 func (connData *connectionData) init() {
-	connData.Bools = make(map[string]bool)
-	connData.Ints = make(map[string]int64)
-	connData.Floats = make(map[string]float64)
-	connData.Strings = make(map[string]string)
-	connData.Interfaces = make(map[string]interface{})
+	connData.bools = make(map[string]bool)
+	connData.ints = make(map[string]int64)
+	connData.floats = make(map[string]float64)
+	connData.strings = make(map[string]string)
+	connData.interfaces = make(map[string]interface{})
 }
 
 // Get a bool from a key-value store unique to each connection
 //
 // NOTE: Bools are stored independently, so you can use the same key for different types
 func (connData *connectionData) GetBool(key string) (value bool, exists bool) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	value, exists = connData.Bools[key]
+	value, exists = connData.bools[key]
 	return value, exists
 }
 
@@ -148,20 +148,20 @@ func (connData *connectionData) GetBool(key string) (value bool, exists bool) {
 //
 // NOTE: Bools are stored independently, so you can use the same key for different types
 func (connData *connectionData) SetBool(key string, value bool) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	connData.Bools[key] = value
+	connData.bools[key] = value
 }
 
 // Clear a bool from a key-value store unique to each connection
 //
 // NOTE: Bools are stored independently, so you can use the same key for different types
 func (connData *connectionData) ClearBool(key string) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	delete(connData.Bools, key)
+	delete(connData.bools, key)
 }
 
 //
@@ -170,10 +170,10 @@ func (connData *connectionData) ClearBool(key string) {
 //
 // NOTE: ints are stored independently, so you can use the same key for different types
 func (connData *connectionData) GetInt(key string) (value int64, exists bool) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	value, exists = connData.Ints[key]
+	value, exists = connData.ints[key]
 	return value, exists
 }
 
@@ -181,20 +181,20 @@ func (connData *connectionData) GetInt(key string) (value int64, exists bool) {
 //
 // NOTE: ints are stored independently, so you can use the same key for different types
 func (connData *connectionData) SetInt(key string, value int64) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	connData.Ints[key] = value
+	connData.ints[key] = value
 }
 
 // Used to clear an int from a key-value store unique to each connection
 //
 // NOTE: ints are stored independently, so you can use the same key for different types
 func (connData *connectionData) ClearInt(key string) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	delete(connData.Ints, key)
+	delete(connData.ints, key)
 }
 
 //
@@ -203,10 +203,10 @@ func (connData *connectionData) ClearInt(key string) {
 //
 // NOTE: floats are stored independently, so you can use the same key for different types
 func (connData *connectionData) GetFloat(key string) (value float64, exists bool) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	value, exists = connData.Floats[key]
+	value, exists = connData.floats[key]
 	return value, exists
 }
 
@@ -214,20 +214,20 @@ func (connData *connectionData) GetFloat(key string) (value float64, exists bool
 //
 // NOTE: floats are stored independently, so you can use the same key for different types
 func (connData *connectionData) SetFloat(key string, value float64) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	connData.Floats[key] = value
+	connData.floats[key] = value
 }
 
 // Used to clear a float from a key-value store unique to each connection
 //
 // NOTE: floats are stored independently, so you can use the same key for different types
 func (connData *connectionData) ClearFloat(key string) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	delete(connData.Floats, key)
+	delete(connData.floats, key)
 }
 
 //
@@ -236,10 +236,10 @@ func (connData *connectionData) ClearFloat(key string) {
 //
 // NOTE: interfaces and strings are different underlying maps, so you can use the same key for each different type
 func (connData *connectionData) GetString(key string) (value string, exists bool) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	value, exists = connData.Strings[key]
+	value, exists = connData.strings[key]
 	return value, exists
 }
 
@@ -247,20 +247,20 @@ func (connData *connectionData) GetString(key string) (value string, exists bool
 //
 // NOTE: interfaces and strings are different underlying maps, so you can use the same key for each different type
 func (connData *connectionData) SetString(key string, value string) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	connData.Strings[key] = value
+	connData.strings[key] = value
 }
 
 // Used to clear a string from a key-value store unique to each connection
 //
 // NOTE: interfaces and strings are different underlying maps, so you can use the same key for each different type
 func (connData *connectionData) ClearString(key string) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	delete(connData.Strings, key)
+	delete(connData.strings, key)
 }
 
 //
@@ -269,10 +269,10 @@ func (connData *connectionData) ClearString(key string) {
 //
 // NOTE: interfaces and strings are different underlying maps, so you can use the same key for each different type
 func (connData *connectionData) GetInterface(key string) (value interface{}, exists bool) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	value, exists = connData.Interfaces[key]
+	value, exists = connData.interfaces[key]
 	return value, exists
 }
 
@@ -280,20 +280,20 @@ func (connData *connectionData) GetInterface(key string) (value interface{}, exi
 //
 // NOTE: interfaces and strings are different underlying maps, so you can use the same key for each different type
 func (connData *connectionData) SetInterface(key string, value interface{}) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	connData.Interfaces[key] = value
+	connData.interfaces[key] = value
 }
 
 // Used to clear an interface from a key-value store unique to each connection
 //
 // NOTE: interfaces and strings are different underlying maps, so you can use the same key for each different type
 func (connData *connectionData) ClearInterface(key string) {
-	connData.Mu.Lock()
-	defer connData.Mu.Unlock()
+	connData.mu.Lock()
+	defer connData.mu.Unlock()
 
-	delete(connData.Interfaces, key)
+	delete(connData.interfaces, key)
 }
 
 //
